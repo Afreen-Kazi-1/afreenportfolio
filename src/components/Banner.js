@@ -1,10 +1,9 @@
+import { useState, useEffect, useCallback } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import profile from "../assets/img/profile.png";
 import { ArrowRightCircle } from "react-bootstrap-icons";
 import "animate.css";
 import TrackVisibility from "react-on-screen";
-
-import { useState, useEffect, useCallback, useMemo } from "react";
 
 export const Banner = () => {
   const [loopNum, setLoopNum] = useState(0);
@@ -12,10 +11,12 @@ export const Banner = () => {
   const [text, setText] = useState("");
   const [delta, setDelta] = useState(300 - Math.random() * 100);
 
-  const toRotate = useMemo(() => ["ML Engineer", "Data Analyst", "AI Developer"], []);
   const period = 2000;
 
   const tick = useCallback(() => {
+    // ✅ moved inside useCallback to remove warning
+    const toRotate = ["ML Engineer", "Data Analyst", "AI Developer"];
+
     const i = loopNum % toRotate.length;
     const fullText = toRotate[i];
     const updatedText = isDeleting
@@ -34,7 +35,7 @@ export const Banner = () => {
       setLoopNum(loopNum + 1);
       setDelta(500);
     }
-  }, [isDeleting, loopNum, text, toRotate, period]);
+  }, [isDeleting, loopNum, text, period]); // ✅ clean deps list
 
   useEffect(() => {
     const ticker = setInterval(() => tick(), delta);
@@ -67,7 +68,14 @@ export const Banner = () => {
                     crafting solutions that are not only smart but also
                     intuitive and visually engaging.
                   </p>
-                  <button onClick={() => console.log("connect")}>
+                  <button
+                    onClick={() =>
+                      window.open(
+                        "https://www.linkedin.com/in/afreen-kazi/",
+                        "_blank"
+                      )
+                    }
+                  >
                     Let’s Connect <ArrowRightCircle size={25} />
                   </button>
                 </div>
