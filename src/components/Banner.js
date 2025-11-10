@@ -1,9 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import profile from "../assets/img/profile.png";
 import { ArrowRightCircle } from "react-bootstrap-icons";
 import "animate.css";
 import TrackVisibility from "react-on-screen";
+
+import { useState, useEffect, useCallback, useMemo } from "react";
 
 export const Banner = () => {
   const [loopNum, setLoopNum] = useState(0);
@@ -11,22 +12,19 @@ export const Banner = () => {
   const [text, setText] = useState("");
   const [delta, setDelta] = useState(300 - Math.random() * 100);
 
-  const toRotate = ["ML Engineer", "Data Analyst", "AI Developer"];
+  const toRotate = useMemo(() => ["ML Engineer", "Data Analyst", "AI Developer"], []);
   const period = 2000;
 
-  // ✅ useCallback ensures 'tick' doesn't cause unnecessary re-renders
   const tick = useCallback(() => {
-    let i = loopNum % toRotate.length;
-    let fullText = toRotate[i];
-    let updatedText = isDeleting
+    const i = loopNum % toRotate.length;
+    const fullText = toRotate[i];
+    const updatedText = isDeleting
       ? fullText.substring(0, text.length - 1)
       : fullText.substring(0, text.length + 1);
 
     setText(updatedText);
 
-    if (isDeleting) {
-      setDelta((prevDelta) => prevDelta / 2);
-    }
+    if (isDeleting) setDelta((prev) => prev / 2);
 
     if (!isDeleting && updatedText === fullText) {
       setIsDeleting(true);
@@ -38,7 +36,6 @@ export const Banner = () => {
     }
   }, [isDeleting, loopNum, text, toRotate, period]);
 
-  // ✅ useEffect handles typing loop cleanly
   useEffect(() => {
     const ticker = setInterval(() => tick(), delta);
     return () => clearInterval(ticker);
