@@ -14,7 +14,6 @@ export const Banner = () => {
   const period = 2000;
 
   const tick = useCallback(() => {
-    // ✅ moved inside useCallback to remove warning
     const toRotate = ["ML Engineer", "Data Analyst", "AI Developer"];
 
     const i = loopNum % toRotate.length;
@@ -35,7 +34,8 @@ export const Banner = () => {
       setLoopNum(loopNum + 1);
       setDelta(500);
     }
-  }, [isDeleting, loopNum, text, period]); // ✅ clean deps list
+  }, [isDeleting, loopNum, text, period]);
+
 
   useEffect(() => {
     const ticker = setInterval(() => tick(), delta);
